@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Knygos{% endblock %}
+
+{% block content %}
+ {% load static %}
+    <h1>Paslaugu sąrašas:</h1></br>
+    {% if paslaugos %}
+    <div class="row">
+      {% for paslauga in paslaugos %}
+        <div class="col-md-4 d-flex align-items-stretch">
+          <div class="card mb-4 shadow-sm">
+            {% if paslauga.cover %}
+              <img src="{{ paslauga.cover.url }}" class="card-img-top" alt="...">
+            {% else %}
+              <img src="{% static 'img/no-image.png' %}" class="card-img-top">
+            {% endif %}
+            <div class="card-body">
+              <p class="card-text"><a href="{{ paslauga.id }}">{{ paslauga.title }}</a></p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {% else %}
+      <p>Bibliotekoje knygų nėra.</p>
+    {% endif %}
+<hr>
+  <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; pirmas</a>
+            <a href="?page={{ page_obj.previous_page_number }}">atgal</a>
+        {% endif %}
+
+        <span class="current">
+            {{ page_obj.number }} iš {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">pirmyn</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">paskutinis &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}

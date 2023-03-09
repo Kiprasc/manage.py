@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Knyga{% endblock %}
+
+{% block content %}
+{% load static %}
+{% if fencing.cover %}
+  <img src="{{ fencing.cover.url }}" style="margin-bottom: 20px;" alt="...">
+{% else %}
+  <img src="{% static 'img/no-image.png' %}"  style="margin-bottom: 20px; width: 200px" alt="...">
+{% endif %}
+<h1>Knygos aprašymas:</h1>
+<p><b>Pavadinimas:</b> {{ fencing.title }} ${{ fencing.price }}</p>
+<hr>
+<p>{{ fencing.summary }}</p>
+<hr>
+<h4>Atsiliepimai:</h4>
+{% if fencing.reviews.all %}
+{% for review in fencing.reviews.all %}
+<hr>
+<img class="rounded-circle" src="{{review.reviewer.profilis.nuotrauka.url}}">
+<br/>
+<strong>{{ review.reviewer }}</strong>, <em>{{ review.date_created }}</em>
+<p>{{ review.content }}</p>
+{% endfor %}
+{% else %}
+<p>Knyga neturi atsiliepimų</p>
+{% endif %}
+{% if user.is_authenticated %}
+<div class="fieldWrapper">
+    <hr><br/>
+    <h4>Palikite atsiliepimą:</h4>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.content }}
+        <input type="submit" value="Paskelbti">
+    </form>
+</div>
+{% endif %}
+<hr>
+<h4>Knygos egzemplioriai:</h4>
+<ol>
+{% for instance in fencing.instances.all %}
+
+    <li>{{ instance.uuid }} ({{ instance.due_back }}) -
+        <span class="{% if instance.status == 'g' %}text-success{% elif instance.status == 'p' %}text-danger{% else %}text-warning{% endif %}">
+        {{ instance.get_status_display }} - {{ instance.reader }}
+            {% if instance.status == 'g' %}
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'paimti' instance.id %}">Paimti</a>
+            {% endif %}
+      </span>
+    </li>
+{% endfor %}
+</ol>
+{% endblock %}

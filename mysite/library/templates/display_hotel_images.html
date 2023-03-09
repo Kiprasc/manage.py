@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Knygos{% endblock %}
+
+{% block content %}
+
+<html lang="en">
+<head>
+</head>
+<body>
+
+    {% for hotel in hotel_images %}
+             <div class="col-md-4 d-flex align-items-stretch">
+                 <div class="card mb-4 shadow-sm">
+                    {{ hotel.name }}
+                    <img src="{{ hotel.hotel_Main_Img.url }}" class="card-img-top" style="width: 100%; float: left; margin-right: 10px;" />
+                 </div>
+             </div>
+
+    {% endfor %}
+
+</body>
+</html>
+
+{% endblock %}
